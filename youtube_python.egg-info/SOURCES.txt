@@ -1,0 +1,8 @@
+setup.cfg
+setup.py
+youtube.py
+youtube_python.egg-info/PKG-INFO
+youtube_python.egg-info/SOURCES.txt
+youtube_python.egg-info/dependency_links.txt
+youtube_python.egg-info/requires.txt
+youtube_python.egg-info/top_level.txt

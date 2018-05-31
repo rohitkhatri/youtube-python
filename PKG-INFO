@@ -1,0 +1,25 @@
+Metadata-Version: 1.1
+Name: youtube-python
+Version: 1.0.1
+Summary: Python Youtube Data API v3
+Home-page: https://github.com/rohitkhatri/youtube-python
+Author: Rohit Khatri
+Author-email: developer.rohitkhatri@gmail.com
+License: GPL
+Description: # youtube-python
+        YouTube Api wrapper in python
+        
+Keywords: youtube data api python v3
+Platform: UNKNOWN
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python :: 2
+Classifier: Programming Language :: Python :: 2.6
+Classifier: Programming Language :: Python :: 2.7
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.3
+Classifier: Programming Language :: Python :: 3.4
+Classifier: Programming Language :: Python :: 3.5
+Classifier: Operating System :: OS Independent
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
