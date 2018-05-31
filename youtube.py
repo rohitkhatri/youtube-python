@@ -1,29 +1,77 @@
 import requests
+from urllib.parse import urlencode
 
 
 class YouTube:
-    api_key = None
-    access_token = None
-    api_base_url = 'https://www.googleapis.com/youtube/v3/'
-    part = 'id,snippet'
+    _client_id = None
+    _client_secret = None
+    _api_key = None
+    _access_token = None
+    _api_base_url = 'https://www.googleapis.com/youtube/v3/'
+    _auth_url = 'https://accounts.google.com/o/oauth2/auth'
+    _exchange_code_url = 'https://accounts.google.com/o/oauth2/token'
+    _scope = ['https://www.googleapis.com/auth/youtube']
+    _part = 'id,snippet'
 
-    def __init__(self, api_key, access_token=None, api_url=None):
-        self.api_key = api_key
-        self.access_token = access_token
+    def __init__(self, client_id, client_secret, api_key, access_token=None, api_url=None):
+        self._client_id = client_id
+        self._client_secret = client_secret
+        self._api_key = api_key
+        self._access_token = access_token
 
         if api_url:
             self.api_url = api_url
 
     def get(self, endpoint, **kwargs):
-        if self.access_token:
-            kwargs['access_token'] = self.access_token
+        if self._access_token:
+            kwargs['access_token'] = self._access_token
         else:
-            kwargs['api_key'] = self.api_key
+            kwargs['api_key'] = self._api_key
 
         if 'part' not in kwargs:
-            kwargs['part'] = self.part
+            kwargs['part'] = self._part
 
-        return self.response(requests.get(self.api_base_url+endpoint, params=kwargs))
+        return self.response(requests.get(self._api_base_url+endpoint, params=kwargs))
+
+    def post(self, endpoint, **kwargs):
+        if self._access_token:
+            kwargs['access_token'] = self._access_token
+        else:
+            kwargs['api_key'] = self._api_key
+
+        return self.response(requests.get(self._api_base_url + endpoint, params=kwargs))
+
+    def get_auth_url(self, redirect_uri, **kwargs):
+        kwargs = {**{
+            'response_type': 'code',
+            'redirect_uri': redirect_uri,
+            'client_id': self._client_id,
+            'access_type': 'offline',
+            'approval_prompt': 'force'
+        }, **kwargs}
+
+        if 'scope' not in kwargs:
+            kwargs['scope'] = self._scope
+
+        kwargs['scope'] = ' '.join(kwargs['scope'])
+
+        return self._auth_url+'?'+urlencode(kwargs)
+
+    def exchange_code(self, code, redirect_uri):
+        params = {
+            'code': code, 'client_id': self._client_id, 'client_secret': self._client_secret,
+            'redirect_uri': redirect_uri, 'grant_type': 'authorization_code'
+        }
+        headers = {'Content-Type': 'application/x-www-form-urlencoded'}
+        return self.response(requests.post(self._exchange_code_url, data=params, headers=headers))
+
+    def refresh_token(self, refresh_token):
+        params = {
+            'client_id': self._client_id, 'client_secret': self._client_secret, 'refresh_token': refresh_token,
+            'grant_type': 'refresh_token'
+        }
+        headers = {'Content-Type': 'application/x-www-form-urlencoded'}
+        return self.response(requests.post(self._exchange_code_url, data=params, headers=headers))
 
     @staticmethod
     def response(response):
