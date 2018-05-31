@@ -1,5 +1,10 @@
+MANIFEST.in
+requirements.txt
 setup.cfg
 setup.py
+youtube/__init__.py
+youtube/api.py
+youtube/exceptions.py
 youtube_python.egg-info/PKG-INFO
 youtube_python.egg-info/SOURCES.txt
 youtube_python.egg-info/dependency_links.txt

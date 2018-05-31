@@ -10,7 +10,7 @@ except IOError:
 
 setup(
     name='youtube-python',
-    version='1.0.5',
+    version='1.0.12',
     description='Python Youtube Data API v3',
     long_description=long_description,
     url='https://github.com/rohitkhatri/youtube-python',
@@ -26,6 +26,6 @@ setup(
         'Topic :: Software Development :: Libraries :: Python Modules'
     ],
     keywords="youtube data api python v3",
-    packages=[''],
+    packages=['youtube'],
     install_requires=['requests']
 )
