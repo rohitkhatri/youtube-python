@@ -10,7 +10,10 @@ class YouTube:
     _api_base_url = 'https://www.googleapis.com/youtube/v3/'
     _auth_url = 'https://accounts.google.com/o/oauth2/auth'
     _exchange_code_url = 'https://accounts.google.com/o/oauth2/token'
-    _scope = ['https://www.googleapis.com/auth/youtube']
+    _scope = [
+        'https://www.googleapis.com/auth/youtube',
+        'https://www.googleapis.com/auth/userinfo.profile'
+    ]
     _part = 'id,snippet'
 
     def __init__(self, client_id, client_secret, api_key, access_token=None, api_url=None):
@@ -31,7 +34,7 @@ class YouTube:
         if 'part' not in kwargs:
             kwargs['part'] = self._part
 
-        return self.response(requests.get(self._api_base_url+endpoint, params=kwargs))
+        return self.response(self._get(self._api_base_url+endpoint, params=kwargs))
 
     def post(self, endpoint, **kwargs):
         if self._access_token:
@@ -39,7 +42,7 @@ class YouTube:
         else:
             kwargs['api_key'] = self._api_key
 
-        return self.response(requests.get(self._api_base_url + endpoint, params=kwargs))
+        return self.response(self._post(self._api_base_url + endpoint, params=kwargs))
 
     def get_auth_url(self, redirect_uri, **kwargs):
         kwargs = {**{
@@ -63,7 +66,12 @@ class YouTube:
             'redirect_uri': redirect_uri, 'grant_type': 'authorization_code'
         }
         headers = {'Content-Type': 'application/x-www-form-urlencoded'}
-        return self.response(requests.post(self._exchange_code_url, data=params, headers=headers))
+        response = self.response(self._post(self._exchange_code_url, params=params, headers=headers))
+
+        if response and 'access_token' in response:
+            self._access_token = response['access_token']
+
+        return response
 
     def refresh_token(self, refresh_token):
         params = {
@@ -72,6 +80,20 @@ class YouTube:
         }
         headers = {'Content-Type': 'application/x-www-form-urlencoded'}
         return self.response(requests.post(self._exchange_code_url, data=params, headers=headers))
+
+    def get_profile(self):
+        return self.response(self._get(
+            'https://www.googleapis.com/oauth2/v1/userinfo',
+            {'access_token': self._access_token}
+        ))
+
+    @staticmethod
+    def _get(url, params=None, **kwargs):
+        return requests.get(url, params=params, **kwargs)
+
+    @staticmethod
+    def _post(url, params=None, **kwargs):
+        return requests.post(url, data=params, **kwargs)
 
     @staticmethod
     def response(response):
