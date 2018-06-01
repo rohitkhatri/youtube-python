@@ -30,7 +30,7 @@ class API:
         if self._access_token:
             kwargs['access_token'] = self._access_token
         else:
-            kwargs['api_key'] = self._api_key
+            kwargs['key'] = self._api_key
 
         if 'part' not in kwargs:
             kwargs['part'] = self._part
@@ -41,7 +41,7 @@ class API:
         if self._access_token:
             kwargs['access_token'] = self._access_token
         else:
-            kwargs['api_key'] = self._api_key
+            kwargs['key'] = self._api_key
 
         return self.response(self._post(self._api_base_url + endpoint, params=kwargs))
 
