@@ -12,7 +12,7 @@ sudo pip install youtube-python
 ## Using
 ```python
 from youtube import API
-api = API(api_key='')
+api = API(client_id='', client_secret='', api_key='', access_token='optional')
 ```
 
 ## References https://developers.google.com/youtube/v3/docs/videos
